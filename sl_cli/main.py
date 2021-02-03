@@ -2,47 +2,41 @@
 
 import argparse
 
-from .login import login
-from .utils import logger
-from .aliases import (
-    alias_options,
-    delete_alias,
-    get_aliases,
-    new_alias,
-    new_random_alias,
-)
+from . import login
+from . import utils
+from . import aliases
 
 
 def main():
 
     # Setup arguments
     parser = argparse.ArgumentParser(description="SimpleLogin CLI application")
-    parser.add_argument(
-        "command",
-        help="""One of the following: login list-aliases alias-options new-alias delete-alias new-random-alias""",
-    )
-
+    subparser = parser.add_subparsers(dest="command")
+    login = subparser.add_parser("login", help="Login into your SimpleLogin account")
+    ls = subparser.add_parser("ls", help="List your aliases")
+    new = subparser.add_parser("new", help="Add a new alias")
+    new_random = subparser.add_parser("new_random", help="Add a new random alias")
+    rm = subparser.add_parser("rm", help="Remove an alias")
     args = parser.parse_args()
+
     if args.command == "login":
-        login()
+        login.login()
 
-    elif args.command == "list-aliases":
-        aliases = get_aliases()
+    elif args.command == "ls":
+        Aliases = aliases.get_aliases()
 
-        for alias in aliases:
-            print(alias)
+        for Alias in Aliases:
+            print(Alias)
 
-    elif args.command == "alias-options":
-        alias_options()
+    elif args.command == "new":
+        aliases.new_alias()
 
-    elif args.command == "new-alias":
-        new_alias()
+    elif args.command == "new_random":
+        aliases.new_random_alias()
 
-    elif args.command == "delete-alias":
-        delete_alias()
+    elif args.command == "rm":
+        aliases.delete_alias()
 
-    elif args.command == "new-random-alias":
-        new_random_alias()
 
-    else:
-        print(f"Unrecognized command: {args.command}")
+if __name__ == "__main__":
+    main()

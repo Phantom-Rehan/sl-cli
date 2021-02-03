@@ -7,21 +7,20 @@ from sys import exit
 
 import requests
 
-from .utils import logger, retrieve_api_key, retrieve_api_url, update_config
-
-api_url = retrieve_api_url()
-
-# Logging
-logger()
+from . import utils
 
 
 def login():
     """Login"""
 
-    init_config = True
-    api_key = retrieve_api_key()
+    # Logging
+    utils.logger()
 
-    if api_key:
+    init_config = True
+    API_KEY = utils.retrieve_api_key()
+    API_URL = utils.retrieve_api_url()
+
+    if API_KEY:
         login_again = input("It apppears you have already logged in, login again?[yn] ")
 
         if login_again.lower()[0] != "y":
@@ -41,15 +40,15 @@ def login():
         }
 
         r = requests.post(
-            url=api_url + "/api/auth/login",
+            url=API_URL + "/api/auth/login",
             json=payload,
         )
 
         try:
             response = r.json()
-            api_key = response["api_key"]
+            API_KEY = response["api_key"]
             # Update
-            update_config({"api_key": api_key})
+            utils.update_config({"api_key": API_KEY})
             logging.info("Succesfully logged in")
             print("Succesfully logged in")
 

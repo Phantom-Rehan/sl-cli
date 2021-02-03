@@ -2,20 +2,20 @@
 
 import requests
 
-from .mailboxes import get_mailboxes
-from .utils import check_error, setup
+from . import mailboxes
+from . import utils
 
 
 def get_aliases():
     """Return a list of Aliases"""
 
-    API_KEY, API_URL = setup()
+    API_KEY, API_URL = utils.setup()
     headers = {"Authentication": API_KEY}
     params = {"page_id": 0}
 
     r = requests.get(url=API_URL + "/api/v2/aliases", params=params, headers=headers)
 
-    check_error(r, "Error fetching aliases")
+    utils.check_error(r, "Error fetching aliases")
     aliases = r.json()["aliases"]
     Aliases = []
 
@@ -28,10 +28,10 @@ def get_aliases():
 def alias_options():
     """Return available alias suffixes, used for a creating a new alias"""
 
-    API_KEY, API_URL = setup()
+    API_KEY, API_URL = utils.setup()
     headers = {"Authentication": API_KEY}
     r = requests.get(url=API_URL + "/api/v5/alias/options", headers=headers)
-    check_error(r, "Error fetching suffixes")
+    utils.check_error(r, "Error fetching suffixes")
     suffixes = r.json()["suffixes"]
 
     return suffixes
@@ -40,7 +40,7 @@ def alias_options():
 def new_alias():
     """Create a new alias"""
 
-    API_KEY, API_URL = setup()
+    API_KEY, API_URL = utils.setup()
     prefix = input("Enter alias prefix: ")
     name = input("Enter alias name (optional): ")
     note = input("Enter alias note (optional): ")
@@ -64,7 +64,7 @@ def new_alias():
     signed_suffix = suffixes[choice - 1]["signed_suffix"]
 
     print()
-    mailboxes = get_mailboxes()["mailboxes"]
+    mailboxes = mailboxes.get_mailboxes()["mailboxes"]
 
     for n, box in enumerate(mailboxes):
         print(f"{n+1}", f"{box['email']}")
@@ -98,13 +98,13 @@ def new_alias():
     r = requests.post(
         API_URL + "/api/v3/alias/custom/new", headers=headers, json=payload
     )
-    check_error(r, "Error creating a new alias")
+    utils.check_error(r, "Error creating a new alias")
 
 
 def delete_alias(name=""):
     """Delete an alias"""
 
-    API_KEY, API_URL = setup()
+    API_KEY, API_URL = utils.setup()
 
     if name != "":
         alias = name
@@ -140,7 +140,7 @@ def delete_alias(name=""):
         r = requests.delete(
             API_URL + f"/api/aliases/{alias_id}", params=params, headers=headers
         )
-        check_error(r, "Error deleting alias")
+        utils.check_error(r, "Error deleting alias")
         print("Deleted alias")
     else:
         print("Exiting...")
@@ -149,7 +149,7 @@ def delete_alias(name=""):
 def new_random_alias():
     """Create a new random alias"""
 
-    API_KEY, API_URL = setup()
+    API_KEY, API_URL = utils.setup()
     headers = {"Authentication": API_KEY}
 
     note = input("Enter alias note (optional): ")
@@ -158,7 +158,7 @@ def new_random_alias():
     }
     print("Creating new random alias...")
     r = requests.post(API_URL + "/api/alias/random/new", headers=headers, json=payload)
-    check_error(r, "Error fetching suffixes")
+    utils.check_error(r, "Error fetching suffixes")
     alias = r.json()["alias"]
     print("Created", alias)
 
