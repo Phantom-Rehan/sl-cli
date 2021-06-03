@@ -4,12 +4,12 @@ import logging
 import os
 from sys import exit
 
-from xdg import BaseDirectory
+import xdg
 
 # XDG compliancy
-CONFIG_DIR = f"{BaseDirectory.xdg_config_home}/sl-cli"
+CONFIG_DIR = f"{xdg.xdg_config_home()}/sl-cli"
 CONFIG_PATH = CONFIG_DIR + "/config.json"
-LOG_PATH = f"{BaseDirectory.xdg_cache_home}/sl-cli.log"
+LOG_PATH = f"{xdg.xdg_cache_home()}/sl-cli.log"
 
 # Logging
 def logger():
@@ -19,7 +19,7 @@ def logger():
         with open(LOG_PATH, "w+") as log:
             pass
 
-    logging.basicConfig(filename=LOG_PATH, encoding="utf-8", level=logging.DEBUG)
+    logging.basicConfig(filename=LOG_PATH, level=logging.DEBUG)
 
 
 def retrieve_api_key():

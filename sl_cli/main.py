@@ -12,7 +12,7 @@ def main():
     # Setup arguments
     parser = argparse.ArgumentParser(description="SimpleLogin CLI application")
     subparser = parser.add_subparsers(dest="command")
-    login = subparser.add_parser("login", help="Login into your SimpleLogin account")
+    logincmd = subparser.add_parser("login", help="Login into your SimpleLogin account")
     ls = subparser.add_parser("ls", help="List your aliases")
     new = subparser.add_parser("new", help="Add a new alias")
     new_random = subparser.add_parser("new_random", help="Add a new random alias")
