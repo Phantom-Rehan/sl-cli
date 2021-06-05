@@ -10,17 +10,22 @@ def get_aliases():
     """Return a list of Aliases"""
 
     API_KEY, API_URL = utils.setup()
-    headers = {"Authentication": API_KEY}
-    params = {"page_id": 0}
-
-    r = requests.get(url=API_URL + "/api/v2/aliases", params=params, headers=headers)
-
-    utils.check_error(r, "Error fetching aliases")
-    aliases = r.json()["aliases"]
     Aliases = []
+    headers = {"Authentication": API_KEY}
+    i = 0
+    while True:
+        params = {"page_id": i}
 
-    for alias in aliases:
-        Aliases.append(Alias(alias))
+        r = requests.get(url=API_URL + "/api/v2/aliases", params=params, headers=headers)
+
+        utils.check_error(r, "Error fetching aliases")
+        aliases = r.json()["aliases"]
+
+        for alias in aliases:
+            Aliases.append(Alias(alias))
+        if len(aliases) != 20:
+            break
+        i = i + 1
 
     return Aliases
 
